@@ -11,12 +11,12 @@ const RemoveBtn = ({ id }) => {
         const confirmed = confirm("Are you sure?");
 
         if (confirmed) {
-            const res = await fetch(`http://localhost:3000/api/topics?id=${id}`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/topics?id=${id}`, {
                 method: "DELETE",
             });
 
             if (res.ok) {
-                router.refresh(); // This refreshes the page after deletion
+                router.refresh(); 
             } else {
                 console.error("Failed to delete the topic.");
             }

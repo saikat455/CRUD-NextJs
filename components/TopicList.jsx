@@ -1,25 +1,33 @@
-import Link from "next/link";
-import RemoveBtn from "./RemoveBtn";
-import { HiPencilAlt } from "react-icons/hi";
+"use client";
 
-const getTopics = async () => {
-  try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/topics`, {
-      cache: "no-store",
-    });
+import React, { useEffect, useState } from 'react';
+import RemoveBtn from './RemoveBtn';
+import Link from 'next/link';
+import { HiPencilAlt } from 'react-icons/hi';
 
-    if (!res.ok) {
-      throw new Error("Failed to fetch topics");
-    }
+export default function TopicsList() {
+  const [topics, setTopics] = useState([]);
 
-    return res.json();
-  } catch (error) {
-    console.log("Error loading topics: ", error);
+  useEffect(() => {
+    const fetchTopics = async () => {
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/topics`);
+        if (!res.ok) {
+          throw new Error("Failed to fetch topics");
+        }
+        const data = await res.json();
+        setTopics(data.topics || []);
+      } catch (error) {
+        console.error("Error loading topics: ", error);
+      }
+    };
+
+    fetchTopics();
+  }, []);
+
+  if (topics.length === 0) {
+    return <div>No topics available.</div>;
   }
-};
-
-export default async function TopicsList() {
-  const { topics } = await getTopics();
 
   return (
     <>
